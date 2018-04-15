@@ -1,0 +1,14 @@
+ {
+ "errorCode":0,
+  "errorInfo":"String",
+  "data":[{
+	  "roleName":"String",  
+	  "roleCode":"String"
+  },{
+	  "roleName":"String",  
+	  "roleCode":"String"
+  },{
+	  "roleName":"String",  
+	  "roleCode":"String"
+  }]
+}

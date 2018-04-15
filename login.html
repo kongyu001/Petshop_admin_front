@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <link href="assets/img/favicon.ico" rel="shortcut icon"/>
+
+    <title>后台-登录</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <!--external css-->
+    <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+
+    <!-- Custom styles for this template -->
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/style-responsive.css" rel="stylesheet">
+
+    <!--AngularJS-->
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/angular-cookies.min.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body ng-app="PetShopApp" ng-controller="LoginController">
+
+<!-- **********************************************************************************************************************************************************
+MAIN CONTENT
+*********************************************************************************************************************************************************** -->
+
+<div id="login-page">
+    <div class="container">
+
+        <form class="form-login">
+            <h2 class="form-login-heading">管理后台</h2>
+            <div class="login-wrap">
+                <input type="text" class="form-control" placeholder="用户名" ng-model="loginForm.userName">
+                <br>
+                <input type="password" class="form-control" placeholder="密码" ng-model="loginForm.password">
+                <br>
+                <div style="width: 45%;float: left;">
+                    <input class="form-control" type="text" placeholder="验证码" ng-model="loginForm.verifyCode"
+                           style="height: 40px;">
+                </div>
+                <div style="width: 50%;float: right;">
+                    <img ng-src="{{imageData}}" ng-click="getVerifyCode()"
+                         style="width: 140px;height: 40px;">
+                </div>
+                <div class="clearfix"></div>
+                <br/>
+                <button class="btn btn-theme btn-block" ng-click="logIn(loginForm)" type="submit"><i
+                        class="fa fa-lock"></i> 登录
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- js placed at the end of the document so the pages load faster -->
+<script src="assets/js/jquery-1.8.3.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="js/lib/jquery.cookie.min.js"></script>
+<!--漂浮消息-->
+<link href="assets/css/toastr.min.css" rel="stylesheet">
+<script src="assets/js/toastr.min.js"></script>
+
+<!--加密组件-->
+<script src="js/lib/cryptoJS/core-min.js"></script>
+<script src="js/lib/cryptoJS/md5.js"></script>
+<script src="js/lib/cryptoJS/sha1-min.js"></script>
+<script src="js/lib/cryptoJS/aes.js"></script>
+<script src="js/lib/cryptoJS/aes-min.js"></script>
+<script src="js/lib/cryptoJS/mode-ecb-min.js"></script>
+<script src="js/lib/cryptoJS/encryptionUtil.js"></script>
+
+<!--BACKSTRETCH-->
+<!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
+<script type="text/javascript" src="assets/js/jquery.backstretch.min.js"></script>
+
+<script src="js/config.js"></script>
+<script src="js/datautil.js"></script>
+<script>
+    $.backstretch("assets/img/pexels-photo-295826.jpg", {speed: 500});
+    var app = angular.module('PetShopApp', []);
+    //var nonce = '';
+    app.controller('LoginController', function ($http, $scope) {
+
+        $scope.loginForm = {
+            verifyToken: ''
+        };
+        $scope.getNonce = function (authorization) {
+            //根据响应头中的authorizationInfo获取nouce
+            return authorization.split("=")[1];
+        }
+        $scope.getVerifyCode = function () {
+            simplePostData({
+                $http: $http,
+                method: 'GET',
+                url: HOST_URL + "/verifycode",
+                callbackFunction: function (response, status, headers) {
+                    $scope.imageData = response.data.imageData;
+                    $scope.loginForm.verifyToken = response.data.token;
+                }
+            })
+        };
+        $scope.getVerifyCode();
+        //$cookies.remove("token");
+
+        $scope.checkInput = function (data) {
+            if (isEmpty(data.userName)) {
+                return '请填写用户名！';
+            } else if (isEmpty(data.password)) {
+                return '请填写密码！';
+            } else if (isEmpty(data.verifyCode)) {
+                return '请填写验证码！';
+            }
+            return false;
+        }
+        //初始化基本信息
+        $scope.logIn = function (data) {
+            var msg = $scope.checkInput(data);
+            if (msg) {
+                toastr.info(msg);
+            } else {
+                simplePostData({
+                    $http: $http,
+                    url: HOST_URL + "/login",
+                    data: {
+                        "data": {
+                            userName: getPwdEncryptStr(data.userName),
+                            password: getPwdEncryptStr(data.password),
+                            verifyCode: data.verifyCode,
+                            verifyToken: $scope.loginForm.verifyToken
+                        }
+                    },
+                    callbackFunction: function (response, status, headers) {
+                        if (response.errorCode === 0) {
+                            //获取nonce并用nonce解密token
+                            var nonce = $scope.getNonce(headers("Authorization-info"));
+                            $.cookie("nonce", nonce, {path: "/"});
+                            $.cookie("token", getDAesString(response.data.userToken, nonce), {path: "/"});
+                            $.cookie("realName", getDAesString(response.data.userName, nonce), {path: "/"});
+                            $.cookie("userId", getDAesString(response.data.userId, nonce), {path: "/"});
+                            location.href = "index.html#/";
+                        }
+
+                    },
+                    errorCallbackFunction: function (response) {
+                        $scope.getVerifyCode();
+                    }
+                });
+            }
+        }
+
+    });
+</script>
+
+</body>
+</html>

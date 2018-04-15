@@ -1,0 +1,11 @@
+//var HOST_URL = "http://192.168.118.250:8099";//杰
+//var HOST_URL = "http://192.168.118.248:8099";//兆
+//var HOST_URL = "http://192.168.2.135:8099";//亮
+//var HOST_URL = "http://192.168.2.134:8099";
+//var HOST_URL = "http://192.168.7.43/guanji_admin";
+//var HOST_URL = "http://192.168.118.136:8901";//曹耘豪
+//var HOST_URL = "http://10.23.101.219:8901";//曹耘豪
+//var HOST_URL = "http://192.168.118.91:8901"//houli
+//var HOST_URL = "http://192.168.2.26:8080/petshop_admin_backend";
+//var HOST_URL = "http://192.168.118.77:8901"; //姜涛
+HOST_URL = "http://localhost:8901"; //

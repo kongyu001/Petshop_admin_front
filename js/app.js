@@ -1,0 +1,30 @@
+var nonce = $.cookie('nonce');
+var app =angular.module('PetshopApp',['ngRoute', 'ngCookies']);
+    app.config(function($routeProvider){
+        $routeProvider
+      .when('/',{
+        	templateUrl:"pages/custom.html",
+        	controller:"customController"
+        })
+        .when('/custom',{
+        	templateUrl:"pages/custom.html",
+        	controller:"customController"
+        })
+        .when('/role',{
+        	templateUrl:"pages/role.html",
+        	controller:"RoleController"
+        })
+         .when('/auth',{
+        	templateUrl:"pages/authority.html",
+        	controller:"AuthController"
+        })
+        .when('/category',{
+        	templateUrl:"pages/category.html",
+        	controller:"CategoryController"
+        })
+        .when('/commodity',{
+        	templateUrl:"pages/commodity.html",
+        	controller:"CommodityController"
+        })
+        .otherwise({redirectTo:'/'});
+    });

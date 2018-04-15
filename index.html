@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <link href="assets/img/favicon.ico" rel="shortcut icon"/>
+
+    <title>后台管理</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <!--external css-->
+    <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet"  />
+    <link rel="stylesheet" type="text/css" href="assets/css/zabuto_calendar.css">
+    <link rel="stylesheet" type="text/css" href="assets/js/gritter/css/jquery.gritter.css" />
+    <link rel="stylesheet" type="text/css" href="assets/lineicons/style.css">    
+    <!-- Custom styles for this template -->
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/style-responsive.css" rel="stylesheet">
+
+    <!--<script src="assets/js/chart-master/Chart.js"></script>-->
+    
+    <!--angularJS-->
+    <script src="js/lib/angular.min.js"></script>
+		<script src="js/lib/angular-cookies.min.js"></script>
+		<script src="js/lib/angular-route.js" type="text/javascript" charset="utf-8"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body ng-app="PetshopApp" ng-controller="IndexController">
+
+  <section id="container" >
+      <!-- **********************************************************************************************************************************************************
+      TOP BAR CONTENT & NOTIFICATIONS
+      *********************************************************************************************************************************************************** -->
+      <!--header start-->
+      <header class="header black-bg">
+          <div class="sidebar-toggle-box">
+              <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+          </div>
+            <!--logo start-->
+            <a href="index.html" class="logo"><b>后台管理</b></a>
+            <!--logo end-->
+            
+            <div class="top-menu">
+            	<ul class="nav pull-right top-menu">
+            		<li style="color: #fff;font-size: 24px;line-height: 60px;margin-left: 20px;">你好！<span ng-bind="realName"></span>&nbsp;&nbsp;&nbsp;</li>
+                <li> <a class="logout" ng-click="logout()"> 退出</a></li>
+            	</ul>
+            </div>
+      </header>
+      <!--header end-->
+      
+      <!-- **********************************************************************************************************************************************************
+      MAIN SIDEBAR MENU
+      *********************************************************************************************************************************************************** -->
+      <!--sidebar start-->
+      <aside>
+          <div id="sidebar"  class="nav-collapse ">
+              <!-- sidebar menu start-->
+              <ul class="sidebar-menu" id="nav-accordion">
+                  <li>
+                      <a href="#/custom" ng-class="getNavItemClass('/custom')">
+                          <i class="fa fa-users"></i>
+                          <span>用户管理</span>
+                      </a>
+                  </li>
+									<li>
+                      <a href="#/role" ng-class="getNavItemClass('/role')">
+                          <i class="fa fa-users"></i>
+                          <span>角色管理</span>
+                      </a>
+                  </li>
+									<li>
+                      <a href="#/auth" ng-class="getNavItemClass('/auth')">
+                          <i class="fa fa-users"></i>
+                          <span>权限管理</span>
+                      </a>
+                  </li>
+									<li>
+                      <a href="#/category" ng-class="getNavItemClass('/category')">
+                          <i class="fa fa-users"></i>
+                          <span>品类管理</span>
+                      </a>
+                  </li>
+									<li>
+                      <a href="#/commodity" ng-class="getNavItemClass('/commodity')">
+                          <i class="fa fa-users"></i>
+                          <span>商品管理</span>
+                      </a>
+                 </li>
+              </ul>
+              <!-- sidebar menu end-->
+          </div>
+      </aside>
+      <!--sidebar end-->
+        <!-- **********************************************************************************************************************************************************
+  MAIN CONTENT
+  *********************************************************************************************************************************************************** -->
+  <!--main content start-->
+  <section id="main-content">
+      <section class="wrapper">
+
+			  <div ng-view></div>
+
+      </section>
+  </section>
+
+  <!--main content end-->
+
+
+      <!--footer start-->
+      <footer class="site-footer">
+          <div class="text-center">
+              Copyright ©2017 PetShop  版权所有 保留一切权利
+          </div>
+      </footer>
+      <!--footer end-->
+  </section>
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="assets/js/jquery.js"></script>
+    <!--<script src="assets/js/jquery-1.8.3.min.js"></script>-->
+    <script src="js/lib/jquery.cookie.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="assets/js/jquery.scrollTo.min.js"></script>
+    <script src="assets/js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="assets/js/jquery.sparkline.js"></script>
+
+
+    <!--common script for all pages-->
+    <script src="assets/js/common-scripts.js"></script>
+    
+    <script type="text/javascript" src="assets/js/gritter/js/jquery.gritter.js"></script>
+    <script type="text/javascript" src="assets/js/gritter-conf.js"></script>
+    <!--日期选择控件-->
+    <script src="js/lib/moment.min.js"></script>
+    <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+    <script src="assets/js/daterangepicker.min.js"></script>
+    
+    <!--选择框-->
+		<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.js"></script>-->
+    <!--<link rel="stylesheet" href="assets/css/select2.min.css" />
+    <script src="assets/js/select2.min.js"></script>-->
+    <link rel="stylesheet" href="assets/css/bootstrap-select.min.css" />
+    <script src="assets/js/bootstrap-select.min.js"></script>
+    <script src="assets/js/defaults-zh_CN.min.js"></script>
+    
+    
+    <!--漂浮消息-->
+		<link href="assets/css/toastr.min.css" rel="stylesheet">
+		<script src="assets/js/toastr.min.js"></script>
+    <!--script for this page-->
+    <script src="js/simple-table.js"></script>
+		<script src="js/lib/echarts.min.js"></script>
+	
+	    <!--加密组件-->
+	<script src="js/lib/cryptoJS/core-min.js"></script>
+	<script src="js/lib/cryptoJS/sha1-min.js"></script>
+	<script src="js/lib/cryptoJS/aes.js"></script>
+	<script src="js/lib/cryptoJS/aes-min.js"></script>
+	<script src="js/lib/cryptoJS/mode-ecb-min.js"></script>
+	<script src="js/lib/cryptoJS/encryptionUtil.js"></script>
+	<!--config-->
+	<script src="js/app.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/datautil.js"></script>
+	<!--controller-->
+	<script src="js/controller/indexController.js"></script>
+	<script src="js/controller/homeController.js"></script>
+	<script src="js/controller/customController.js"></script>
+	<script src="js/controller/roleController.js"></script>
+	<script src="js/controller/authorityController.js"></script>
+	<script src="js/controller/categoryController.js"></script>
+	<script src="js/controller/commodityController.js"></script>
+  </body>
+</html>

@@ -1,0 +1,220 @@
+<div class="row mt">
+	<div class="col-md-12">
+		<div class="content-panel">
+			<table class="table table-striped table-advance table-hover">
+				<h3 class="centered">商品列表</h3>
+				<hr />
+				<h4>
+      	  	  	<button class="btn btn-success btn-xs pull-left" ng-click="addCommodity()" style="margin-right: 30px;font-size: 14px;">
+      	  	  		<i class="fa fa-plus-square" aria-hidden="true"></i>创建商品
+      	  	  	</button>
+													<!--搜索商品-->
+				<div class="col-lg-4 pull-right" style="margin-right: 30px;">
+                        <div class="input-group">
+                         <input type="text" class="form-control" placeholder="搜索商品" ng-model="search.name">
+                            <span class="input-group-btn">
+                           <button class="btn btn-default" type="button" ng-click="searchCommodity(search.name)">搜索</button>
+                            </span>
+                        </div>
+                    </div>
+      	  	  </h4>
+
+				<thead>
+					<tr>
+						<th>商品id</th>
+						<th>商品名称</th>
+						<th>商品价格</th>
+						<th>商品品类</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="comdt in commodities">
+						<td ng-bind="comdt.id"></td>  
+						<td ng-bind="comdt.commodityName"></td>
+						<td ng-bind="comdt.commodityPrice"></td>
+						<td ><span ng-repeat="cate in comdt.commodityCategoryList">{{cate.categoryName}}&nbsp;&nbsp;</span></td>
+						<td>
+							<button type="button" class="btn btn-primary btn-xs" ng-click="editCommodity(comdt)"><i class="fa fa-pencil"></i> 编辑商品</button>
+							<button class="btn btn-danger btn-xs" ng-click="deleteCommodity(comdt)"><i class="fa fa-trash-o "></i> 删除商品</button>
+						</td>
+					</tr>
+					
+				</tbody>
+			</table>
+			<nav class="dataTables_paginate paging_full_numbers text-center">
+				<ul class="pagination" id="indexTable_paginate">
+					<li>
+						<a href="" class="paginate_button" tabindex="0" ng-click="loadList()">&laquo;</a>
+					</li>
+					<li ng-repeat="page in pageParams.pageArray">
+						<a href="" class="first paginate_button paginate_button" tabindex="0" ng-click="loadList(page)" ng-bind="page"></a>
+					</li>
+					<li>
+						<a href="" class="paginate_button" tabindex="0" ng-click="loadList(pageParams.pages)">&raquo;</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<!-- /content-panel -->
+	</div>
+	<!-- /col-md-12 -->
+</div>
+<!-- /row -->
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document" style="width: 900px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel" ng-bind="editMode ? '编辑商品' : '创建商品'">编辑商品</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+<!---------------------------------------------创建模态框内容start------------------------------------------------------------------>
+					<div ng-hide="editMode" class="form-group pull-left" style="width: 50%;">
+						
+						<label class="col-sm-3 control-label" style="margin-bottom: 10px;">商品名称</label>
+						<div class="col-sm-9" style="margin-bottom: 10px;">
+							<input type="text"  class="form-control" placeholder="商品名称" ng-model="newCommodity.commodityName">				
+						</div>
+						
+						<label class="col-sm-3 control-label" style="margin-bottom: 10px;">商品价格</label>
+						<div class="col-sm-9" style="margin-bottom: 10px;">
+							<input type="text" class="form-control" placeholder="商品价格" ng-keyup="input_price(newCommodity,'commodityPrice')"  ng-model="newCommodity.commodityPrice">
+						</div>
+						
+						<label class="col-sm-3 control-label" style="margin-bottom: 10px;">库存数量</label>
+						<div class="col-sm-9" style="margin-bottom: 10px;">
+							<input type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " class="form-control" placeholder="库存数量" ng-model="newCommodity.commodityLast">
+						</div>
+
+						<label class="col-sm-3 control-label" style="margin-bottom: 10px;">已售数量</label>
+						<div class="col-sm-9" style="margin-bottom: 10px;">
+							<input type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " class="form-control" placeholder="已售数量" ng-model="newCommodity.commoditySold">
+						</div>
+						
+					</div>					
+							<!--添加模块图片显示start-->
+					<div ng-hide="editMode" class="form-group pull-right" style="width:50%;">
+						<label class="col-sm-3 control-label">图片</label>
+						<div class="col-sm-9" style="flex-direction: column;">
+							<img ng-src="{{newCommodity.getfile}}" id="imgSdf" alt="" class="img-thumbnail" style="display:flex; width: 190px;height: 190px;">
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">上传图片</button>
+						</div>
+					</div>
+							<!--添加模块图片显示end-->
+					<div ng-hide="editMode" class="form-group pull-left" style="width:50%;">
+						<label class="col-sm-3 control-label">品类列表</label>
+						<div class="col-sm-9">
+							<select id="resourceList" data-live-search="true" multiple ng-model="newCommodity.commodityCategoryIdList" style="width: 100%;">
+								<option ng-repeat="resource in resources" value="{{resource.id}}">{{resource.categoryName}}</option>
+							</select>
+						</div>
+					</div>
+<!--------------------------------------------------创建模态框内容end--------------------------------------------------------------------------------->
+					
+<!--------------------------------------------------编辑模态框内容start-------------------------------------------------------------->
+					<div ng-show="editMode">
+						<div class="form-group pull-left" style="width: 50%;">
+							<label class="col-sm-3 control-label" style="margin-bottom: 10px;">商品名称</label>
+							<div class="col-sm-9" style="margin-bottom: 10px;">
+								<input type="text" class="form-control" placeholder="商品名称" ng-model="newCommodity.commodityName">
+							</div>
+							<label class="col-sm-3 control-label" style="margin-bottom: 10px;">商品价格</label>
+							<div class="col-sm-9" style="margin-bottom: 10px;">
+								<input type="text" ng-keyup="input_price(newCommodity,'commodityPrice')" class="form-control" placeholder="商品价格" ng-model="newCommodity.commodityPrice">
+							</div>
+							<label class="col-sm-3 control-label" style="margin-bottom: 10px;">库存数量</label>
+							<div class="col-sm-9" style="margin-bottom: 10px;">
+								<input type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " class="form-control" placeholder="库存数量" ng-model="newCommodity.commodityLast">
+							</div>
+							<label class="col-sm-3 control-label" style="margin-bottom: 10px;">已售数量</label>
+							<div class="col-sm-9" style="margin-bottom: 10px;">
+								<input type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " onafterpaste="this.value=this.value.replace(/[^\d]/g,'') "  class="form-control" placeholder="已售数量" ng-model="newCommodity.commoditySold">
+							</div>
+						</div>
+						<!--编辑模块图片显示start-->	
+						<div class="form-group pull-right" style="width: 50%;">
+							<label class="col-sm-3 control-label">图片</label>
+							<div class="col-sm-9" style="flex-direction: column;">
+								<img id="imgEdf" ng-src="{{newCommodity.getfile}}" alt="该用户未上传图片" class="img-thumbnail" style="display:flex; width: 190px;height: 190px;">
+								<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit_uploadModal">上传图片</button>
+							</div>
+						</div>
+						<!--编辑模块图片显示end-->
+						<div class="form-group pull-left" style="width: 50%;">
+							<label class="col-sm-3 control-label">品类列表</label>
+							<div class="col-sm-9">
+								<select id="categoryList" data-live-search="true" multiple ng-model="newCommodity.commodityCategoryIdList" style="width: 100%;">
+									<option ng-repeat="resource in resources" value="{{resource.id}}">{{resource.categoryName}}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				<div class="clearfix"></div>
+				</form>
+			</div>  
+<!---------------------------------------编辑模态框内容end------------------------------------------------------------------------------------>
+			
+<!---------------------------------------添加或编辑的保存------------------------------------------------------------------------------------->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel(newCommodity)">关闭</button>
+					<button type="button" class="btn btn-primary" ng-click="editCommodityClick(newCommodity)">保存</button>
+				</div>
+		</div>   <!--/modal-content-->
+	</div>   <!--/modal-dialog-->
+</div>     <!--/modal fade-->
+											<!--删除模块-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">确认删除{{comdt.commodityName}}？</h4>
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-danger" ng-click="deleteUserClick()">删除</button>
+			</div>
+		</div>
+	</div>
+</div>
+										<!--添加模块的上传图片-->
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">确认上传？</h4>
+			</div>
+			<form class="form-horizontal" enctype="multipart/form-data" >								
+				<input type="file" alt="未上传图片" id="upload" name="file" />
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>					
+					<button type="button" class="btn btn-primary" ng-click="add_submit(newCommodity)">确认</button>
+				</div>	
+			</form>
+		</div>
+	</div>
+</div>
+
+											<!--编辑模块的上传图片-->
+<div class="modal fade" id="edit_uploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">确认上传？</h4>
+			</div>
+			<form class="form-horizontal"  method="post" enctype="multipart/form-data">	
+				<input type="file" alt="未上传图片" id="edit_upload" name="file" ng-model="newCommodity" />
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>					
+					<button type="button" class="btn btn-primary" ng-click="submit(newCommodity)">确认</button>
+				</div>	
+			</form>
+		</div>
+	</div>
+</div>

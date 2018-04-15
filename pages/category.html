@@ -1,0 +1,147 @@
+<div class="row mt">
+	<div class="col-lg-12">
+		<div class="content-panel">
+			<section id="unseen">
+				<table class="table table-bordered table-striped table-condensed">
+					<fieldset>
+						<div class="centered">
+							<h3>品类管理</h3>
+						</div>
+						<hr>
+
+						<div style="padding-left: 60px;display: inline;font-size: 15px;">
+							<button class="btn btn-success btn-xs pull-left"  style="margin-left: 30px;font-size: 14px;" ng-click="addCate(addCategory)">
+                              	<i class="fa fa-plus-square" aria-hidden="true"></i>创建品类
+							</button>
+						</div>
+<!--搜索品类-->
+						<div class="col-lg-4 pull-right" style="margin-right: 30px;">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="搜索品类" ng-model="cate.cateName">
+								<span class="input-group-btn">
+                           <button class="btn btn-default" type="button" ng-click="searchCate(cate)">搜索</button>
+                            </span>
+							</div>
+						</div>
+						
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>品类ID</th>
+									<th>品类名称</th>
+									<th>品类描述</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="ca in category">
+									<td ng-bind="ca.id"></td>
+									<td ng-bind="ca.categoryName"></td>
+									<td ng-bind="ca.categoryDescription"></td>
+									<td>
+										<button type="button" class="btn btn-primary btn-xs " ng-click="editCategory(ca)">编辑品类<i class="fa fa-pencil"></i></button>
+										<button type="button" class="btn btn-danger btn-xs " ng-click="deleteCate(ca)"><i class="fa fa-trash-o "></i> 删除品类</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<nav class="dataTables_paginate paging_full_numbers text-center">
+							<ul class="pagination" id="indexTable_paginate">
+								<li>
+									<a href="" class="paginate_button" tabindex="0" ng-click="loadList()">&laquo;</a>
+								</li>
+								<li ng-repeat="page in pageParams.pageArray">
+									<a href="" class="first paginate_button paginate_button" tabindex="0" ng-click="loadList(page)" ng-bind="page"></a>
+								</li>
+								<li>
+									<a href="" class="paginate_button" tabindex="0" ng-click="loadList(pageParams.pages)">&raquo;</a>
+								</li>
+							</ul>
+						</nav>
+
+					</fieldset>
+
+				</table>
+			</section>
+		</div>
+		<!-- /content-panel -->
+	</div>
+	<!-- /col-lg-4 -->
+</div>
+<!-- /row -->
+<!--创建品类start-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="exampleModalLabel">创建品类</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="recipient-name" class="control-label">品类名称</label>
+						<input type="text" class="form-control" id="recipient-name" ng-model="addCategory.categoryName">
+					</div>
+					<div class="form-group">
+						<label for="recipient-name" class="control-label">品类描述</label>
+						<input type="text" class="form-control" id="recipient-name" ng-model="addCategory.categoryDescription">
+					</div>
+				</form>
+
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" ng-click="addCategoryClick(addCategory)">确定</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--编辑品类start-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="editModalLabel">编辑品类</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="recipient-name" class="control-label">品类</label>
+						<input type="text" class="form-control" id="recipient-password" ng-model="editCate.categoryName">
+					</div>
+					<div class="form-group">
+						<label for="message-text" class="control-label">品类描述</label>
+						<input type="text" class="form-control" id="recipient-password" ng-model="editCate.categoryDescription">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" ng-click="editCategoryClick(editCate)">确定</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--删除品类start-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="exampleModalLabel">删除品类{{cateName}}</h4>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" ng-click="deleteCateClick(cate)">删除</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
